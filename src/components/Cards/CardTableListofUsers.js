@@ -10,14 +10,23 @@ import {
   getOrderAllUsersByAge,
   getUserBetweenXAndY,
   DeleteUserById,
-  searchUsersByUsername
+  searchUsersByUsername,
+  updateUserById,
 } from "../../service/apiUser";
-
+import { useHistory } from "react-router-dom";
 // components
 
 export default function CardTableListofUsers({ color }) {
   const [users, setUsers] = useState([]);
   const [username, setUsername] = useState("");
+  const [newUser, setNewUser] = useState({
+    firstName: "",
+    lastName: "",
+    age: "",
+    email: "",
+    password: "",
+    image_User: "",
+  });
 
   const getUsers = async () => {
     try {
@@ -64,14 +73,14 @@ export default function CardTableListofUsers({ color }) {
     }
   };
 
-   useEffect(() => {
-     getUsers();
-  //   const interval = setInterval(() => {
-  //     getUsers();
-  //   }, 5000);
+  useEffect(() => {
+    getUsers();
+    //   const interval = setInterval(() => {
+    //     getUsers();
+    //   }, 5000);
 
-  //   return () => clearInterval(interval);
-   }, []);
+    //   return () => clearInterval(interval);
+  }, []);
 
   const deleteUser = async (id) => {
     try {
@@ -87,158 +96,183 @@ export default function CardTableListofUsers({ color }) {
       console.log("Error while calling getUsers API", error);
     }
   };
+  // const updateUserById = async (id, updateData) => {
+  //   try {
+  //     await updateUserById(id, updateData)
+  //       .then((response) => {
+  //         console.log("Utilisateur mis à jour :", response.data.user);
+  //         getUsers(); // Rafraîchit la liste après mise à jour
+  //       })
+  //       .catch((error) => {
+  //         console.log("Erreur lors de la mise à jour de l'utilisateur", error);
+  //       });
+  //   } catch (error) {
+  //     console.log("Erreur lors de la mise à jour de l'utilisateur", error);
+  //   }
+  // };
+  const history = useHistory();
 
-  
-  
+
+
+
+
+
+
 
   return (
     <>
       <div
-  className={
-    "relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded " +
-    (color === "light" ? "bg-white" : "bg-lightBlue-900 text-white")
-  }
->
-  <div className="rounded-t mb-0 px-4 py-3 border-0">
-    <div className="flex flex-wrap items-center">
-      <div className="relative w-full px-4 max-w-full flex-grow flex-1">
-        <h3
-          className={
-            "font-semibold text-lg " +
-            (color === "light" ? "text-blueGray-700" : "text-white")
-          }
-        >
-          Table des Utilisateurs
-        </h3>
-        <button
-          className="bg-lightBlue-500 text-white active:bg-lightBlue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-          type="button"
-          onClick={() => getOrderUsers()}
-        >
-          Trier par âge
-        </button>
-        {/* */}
-      </div>
-    </div>
-  </div>
-  <div className="block w-full overflow-x-auto">
-    {/* Projects table */}
-    <table className="items-center w-full bg-transparent border-collapse">
-      <thead>
-        <tr>
-          <th
-            className={
-              "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left " +
-              (color === "light"
-                ? "bg-blueGray-50 text-blueGray-500 border-blueGray-100"
-                : "bg-lightBlue-800 text-lightBlue-300 border-lightBlue-700")
-            }
-          >
-            NOM
-          </th>
-          <th
-            className={
-              "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left " +
-              (color === "light"
-                ? "bg-blueGray-50 text-blueGray-500 border-blueGray-100"
-                : "bg-lightBlue-800 text-lightBlue-300 border-lightBlue-700")
-            }
-          >
-            EMAIL
-          </th>
-          <th
-            className={
-              "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left " +
-              (color === "light"
-                ? "bg-blueGray-50 text-blueGray-500 border-blueGray-100"
-                : "bg-lightBlue-800 text-lightBlue-300 border-lightBlue-700")
-            }
-          >
-            AGE
-          </th>
-          <th
-            className={
-              "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left " +
-              (color === "light"
-                ? "bg-blueGray-50 text-blueGray-500 border-blueGray-100"
-                : "bg-lightBlue-800 text-lightBlue-300 border-lightBlue-700")
-            }
-          >
-            RÔLE
-          </th>
-          <th
-            className={
-              "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left " +
-              (color === "light"
-                ? "bg-blueGray-50 text-blueGray-500 border-blueGray-100"
-                : "bg-lightBlue-800 text-lightBlue-300 border-lightBlue-700")
-            }
-          >
-            STATUS
-          </th>
-          <th
-            className={
-              "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left " +
-              (color === "light"
-                ? "bg-blueGray-50 text-blueGray-500 border-blueGray-100"
-                : "bg-lightBlue-800 text-lightBlue-300 border-lightBlue-700")
-            }
-          ></th>
-        </tr>
-      </thead>
-      <tbody>
-        {users.map((user) => (
-          <tr key={user._id}>
-            <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">
-              <img
-                src={`http://localhost:5000/images/users/${user.image_User}`}
-                className="h-12 w-12 bg-white rounded-full border"
-                alt="..."
-              />
-              <span
+        className={
+          "relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded " +
+          (color === "light" ? "bg-white" : "bg-lightBlue-900 text-white")
+        }
+      >
+        <div className="rounded-t mb-0 px-4 py-3 border-0">
+          <div className="flex flex-wrap items-center">
+            <div className="relative w-full px-4 max-w-full flex-grow flex-1">
+              <h3
                 className={
-                  "ml-3 font-bold " +
-                  (color === "light" ? "text-blueGray-600" : "text-white")
+                  "font-semibold text-lg " +
+                  (color === "light" ? "text-blueGray-700" : "text-white")
                 }
               >
-                {user.username}
-              </span>
-            </th>
-            <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-              {user.email}
-            </td>
-            <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-              {user.age}
-            </td>
-            <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-              <div className="flex">{user.role}</div>
-            </td>
-            <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-              <div className="flex items-center">
-                <div className="relative w-full">{user.statu}</div>
-              </div>
-            </td>
-            <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-right">
+                Table des Utilisateurs
+              </h3>
               <button
                 className="bg-lightBlue-500 text-white active:bg-lightBlue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                 type="button"
+                onClick={() => getOrderUsers()}
               >
-                Update
+                Trier par âge
               </button>
-              <button
-                className="bg-lightBlue-500 text-white active:bg-lightBlue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                type="button"
-                onClick={() => deleteUser(user._id)}
-              >
-                Delete
-              </button>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  </div>
-</div>
+              {/* */}
+            </div>
+          </div>
+        </div>
+        <div className="block w-full overflow-x-auto">
+          {/* Projects table */}
+          <table className="items-center w-full bg-transparent border-collapse">
+            <thead>
+              <tr>
+                <th
+                  className={
+                    "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left " +
+                    (color === "light"
+                      ? "bg-blueGray-50 text-blueGray-500 border-blueGray-100"
+                      : "bg-lightBlue-800 text-lightBlue-300 border-lightBlue-700")
+                  }
+                >
+                  NOM & PRÉNOM
+                </th>
+                <th
+                  className={
+                    "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left " +
+                    (color === "light"
+                      ? "bg-blueGray-50 text-blueGray-500 border-blueGray-100"
+                      : "bg-lightBlue-800 text-lightBlue-300 border-lightBlue-700")
+                  }
+                >
+                  EMAIL
+                </th>
+                <th
+                  className={
+                    "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left " +
+                    (color === "light"
+                      ? "bg-blueGray-50 text-blueGray-500 border-blueGray-100"
+                      : "bg-lightBlue-800 text-lightBlue-300 border-lightBlue-700")
+                  }
+                >
+                  AGE
+                </th>
+                <th
+                  className={
+                    "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left " +
+                    (color === "light"
+                      ? "bg-blueGray-50 text-blueGray-500 border-blueGray-100"
+                      : "bg-lightBlue-800 text-lightBlue-300 border-lightBlue-700")
+                  }
+                >
+                  RÔLE
+                </th>
+                <th
+                  className={
+                    "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left " +
+                    (color === "light"
+                      ? "bg-blueGray-50 text-blueGray-500 border-blueGray-100"
+                      : "bg-lightBlue-800 text-lightBlue-300 border-lightBlue-700")
+                  }
+                >
+                  STATUS
+                </th>
+                <th
+                  className={
+                    "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left " +
+                    (color === "light"
+                      ? "bg-blueGray-50 text-blueGray-500 border-blueGray-100"
+                      : "bg-lightBlue-800 text-lightBlue-300 border-lightBlue-700")
+                  }
+                ></th>
+              </tr>
+            </thead>
+            <tbody>
+              {users.map((user) => (
+                <tr key={user._id}>
+                  <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">
+                    <img
+                      src={`http://localhost:5000/images/users/${user.image_User}`}
+                      className="h-12 w-12 bg-white rounded-full border"
+                      alt="..."
+                    />
+                    <span
+                      className={
+                        "ml-3 font-bold " +
+                        (color === "light" ? "text-blueGray-600" : "text-white")
+                      }
+                    >
+                      {user.firstName} {user.lastName}
+                    </span>
+                  </th>
+                  <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                    {user.email}
+                  </td>
+                  <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                    {user.age}
+                  </td>
+                  <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                    <div className="flex">{user.role}</div>
+                  </td>
+                  <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                    <div className="flex items-center">
+                      <div className="relative w-full">
+                        {user.accountStatus === "en_attente" && "En attente"}
+                        {user.accountStatus === "actif" && "Actif"}
+                        {user.accountStatus === "refuse" && "Refusé"}
+                      </div>
+                    </div>
+                  </td>
+                  <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-right">
+                    <button
+                      className="bg-lightBlue-500 text-white active:bg-lightBlue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                      type="button"
+                      onClick={() => history.push({ pathname: "/admin/UpdateProfile", state: { user: user } })}
+
+                    >
+                      Update
+                    </button>
+                    <button
+                      className="bg-lightBlue-500 text-white active:bg-lightBlue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                      type="button"
+                      onClick={() => deleteUser(user._id)}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </>
   );
 }

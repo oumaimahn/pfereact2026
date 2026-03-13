@@ -42,7 +42,13 @@ export async function getUserBetweenXAndY(minAge, maxAge) {
 }
 export async function deleteUserById(id) {
     return await axios.delete(`${apiUrl}/deleteUserById/${id}`)
+
 }
+export async function updateUserById(id, updateData){
+    return await axios.put(`${apiUrl}/updateUser/${id}` , updateData)
+}
+
+
 
 
 
