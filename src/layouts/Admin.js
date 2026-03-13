@@ -9,12 +9,13 @@ import HeaderStats from "components/Headers/HeaderStats.js";
 import FooterAdmin from "components/Footers/FooterAdmin.js";
 
 // views
-
+import Pediatres from "views/admin/Pediatres.js";
 import Dashboard from "views/admin/Dashboard.js";
 import Maps from "views/admin/Maps.js";
 import Settings from "views/admin/Settings.js";
 import UpdateProfile from "views/admin/UpdateProfile.js";
 import Tables from "views/admin/Tables.js";
+import Parents from "views/admin/Parents.js";
 
 export default function Admin() {
   return (
@@ -26,11 +27,14 @@ export default function Admin() {
         <HeaderStats />
         <div className="px-4 md:px-10 mx-auto w-full -m-24">
           <Switch>
+            <Route path="/admin/parents" exact component={Parents} />
+
             <Route path="/admin/dashboard" exact component={Dashboard} />
             <Route path="/admin/maps" exact component={Maps} />
             <Route path="/admin/settings" exact component={Settings} />
             <Route path="/admin/UpdateProfile" exact component={UpdateProfile} />
             <Route path="/admin/tables" exact component={Tables} />
+            <Route path="/admin/pediatres" exact component={Pediatres} />
             <Redirect from="/admin" to="/admin/dashboard" />
           </Switch>
           <FooterAdmin />

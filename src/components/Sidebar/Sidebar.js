@@ -105,6 +105,49 @@ export default function Sidebar() {
                   Dashboard
                 </Link>
               </li>
+              <li className="items-center">
+  <Link
+    className={
+      "text-xs uppercase py-3 font-bold block " +
+      (window.location.href.indexOf("/admin/pediatres") !== -1
+        ? "text-lightBlue-500 hover:text-lightBlue-600"
+        : "text-blueGray-700 hover:text-blueGray-500")
+    }
+    to="/admin/pediatres"
+  >
+    <i
+      className={
+        "fas fa-user-md mr-2 text-sm " +
+        (window.location.href.indexOf("/admin/pediatres") !== -1
+          ? "opacity-75"
+          : "text-blueGray-300")
+      }
+    ></i>{" "}
+    Pédiatres
+  </Link>
+</li>
+
+<li className="items-center">
+  <Link
+    className={
+      "text-xs uppercase py-3 font-bold block " +
+      (window.location.href.indexOf("/admin/parents") !== -1
+        ? "text-lightBlue-500 hover:text-lightBlue-600"
+        : "text-blueGray-700 hover:text-blueGray-500")
+    }
+    to="/admin/parents"
+  >
+    <i
+      className={
+        "fas fa-users mr-2 text-sm " +
+        (window.location.href.indexOf("/admin/parents") !== -1
+          ? "opacity-75"
+          : "text-blueGray-300")
+      }
+    ></i>{" "}
+    Parents
+  </Link>
+</li>
 
               <li className="items-center">
                 <Link

@@ -72,6 +72,11 @@ export default function CardTableListofUsers({ color }) {
       console.log("Error while calling getUsers API", error);
     }
   };
+  const filteredUsers = users.filter(u =>
+    u.firstName?.toLowerCase().includes(username.toLowerCase()) ||
+    u.lastName?.toLowerCase().includes(username.toLowerCase()) ||
+    u.email?.toLowerCase().includes(username.toLowerCase())
+);
 
   useEffect(() => {
     getUsers();
@@ -128,27 +133,32 @@ export default function CardTableListofUsers({ color }) {
         }
       >
         <div className="rounded-t mb-0 px-4 py-3 border-0">
-          <div className="flex flex-wrap items-center">
-            <div className="relative w-full px-4 max-w-full flex-grow flex-1">
-              <h3
-                className={
-                  "font-semibold text-lg " +
-                  (color === "light" ? "text-blueGray-700" : "text-white")
-                }
-              >
-                Table des Utilisateurs
-              </h3>
-              <button
-                className="bg-lightBlue-500 text-white active:bg-lightBlue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                type="button"
-                onClick={() => getOrderUsers()}
-              >
-                Trier par âge
-              </button>
-              {/* */}
-            </div>
-          </div>
-        </div>
+  <div className="flex flex-wrap items-center justify-between">
+    <div className="relative w-full px-4 max-w-full flex-grow flex-1 flex items-center justify-between">
+      <h3 className={"font-semibold text-lg " + (color === "light" ? "text-blueGray-700" : "text-white")}>
+        Table des Utilisateurs
+      </h3>
+      <div className="flex items-center">
+        <input
+          type="text"
+          placeholder="Rechercher par nom ou email..."
+          className="border-0 px-3 py-2 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-64"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <button
+          className="bg-lightBlue-500 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none ease-linear transition-all duration-150 ml-2"
+          type="button"
+          onClick={() => getOrderUsers()}
+        >
+          Trier par âge
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+        
+
         <div className="block w-full overflow-x-auto">
           {/* Projects table */}
           <table className="items-center w-full bg-transparent border-collapse">
@@ -215,7 +225,7 @@ export default function CardTableListofUsers({ color }) {
               </tr>
             </thead>
             <tbody>
-              {users.map((user) => (
+              {filteredUsers.map((user) => (
                 <tr key={user._id}>
                   <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">
                     <img
@@ -257,14 +267,14 @@ export default function CardTableListofUsers({ color }) {
                       onClick={() => history.push({ pathname: "/admin/UpdateProfile", state: { user: user } })}
 
                     >
-                      Update
+                      MODIFIER
                     </button>
                     <button
                       className="bg-lightBlue-500 text-white active:bg-lightBlue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                       type="button"
                       onClick={() => deleteUser(user._id)}
                     >
-                      Delete
+                      SUPPRIMER
                     </button>
                   </td>
                 </tr>
