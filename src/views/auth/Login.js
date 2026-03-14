@@ -1,99 +1,147 @@
-import React from "react";
-import { Link } from "react-router-dom";
-
+import React, { useState } from "react";
+import { Link, useHistory } from "react-router-dom";
+import axios from "axios";
+ 
 export default function Login() {
+  const history = useHistory();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
+ 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+ 
+    try {
+      const res = await axios.post("http://localhost:5000/users/login", { email, password });
+      const { user, token } = res.data;
+ 
+      if (rememberMe) {
+        localStorage.setItem("token", token);
+        localStorage.setItem("user", JSON.stringify(user));
+      } else {
+        sessionStorage.setItem("token", token);
+        sessionStorage.setItem("user", JSON.stringify(user));
+      }
+ 
+      if (user.role === "admin") history.push("/admin/dashboard");
+      else if (user.role === "parent") history.push("/parent/dashboard");
+      else if (user.role === "pediatre") history.push("/pediatre/dashboard");
+    } catch (err) {
+      setError(err.response?.data?.message || "Une erreur est survenue.");
+    } finally {
+      setLoading(false);
+    }
+  };
+ 
+  const inputStyle = {
+    width: "100%", padding: "0.85rem 1rem",
+    background: "#f1f5f9",
+    border: "1px solid #e2e8f0",
+    borderRadius: "10px", color: "#1e293b",
+    fontSize: "0.9rem", outline: "none", boxSizing: "border-box",
+  };
+ 
+  const labelStyle = {
+    display: "block", color: "#475569",
+    fontSize: "0.85rem", fontWeight: "600",
+    marginBottom: "0.4rem",
+  };
+ 
   return (
-    <>
-      <div className="container mx-auto px-4 h-full">
-        <div className="flex content-center items-center justify-center h-full">
-          <div className="w-full lg:w-4/12 px-4">
-            <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-200 border-0">
-              <div className="rounded-t mb-  0 px-6 py-6">
-                <div className="text-center mb-3">
-                  <h6 className="text-blueGray-500 text-sm font-bold">
-                    Welcome to 
-                  </h6>
-                </div>
-                <div className="btn-wrapper text-center">
-                  
-                  
-                </div>
-                <hr className="mt-6 border-b-1 border-blueGray-300" />
-              </div>
-              <div className="flex-auto px-4 lg:px-10 py-10 pt-0">
-                <div className="text-blueGray-400 text-center mb-3 font-bold">
-                  <small>Or sign in with credentials</small>
-                </div>
-                <form>
-                  <div className="relative w-full mb-3">
-                    <label
-                      className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                      htmlFor="grid-password"
-                    >
-                      Email
-                    </label>
-                    <input
-                      type="email"
-                      className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                      placeholder="Email"
-                    />
-                  </div>
-
-                  <div className="relative w-full mb-3">
-                    <label
-                      className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                      htmlFor="grid-password"
-                    >
-                      Password
-                    </label>
-                    <input
-                      type="password"
-                      className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                      placeholder="Password"
-                    />
-                  </div>
-                  <div>
-                    <label className="inline-flex items-center cursor-pointer">
-                      <input
-                        id="customCheckLogin"
-                        type="checkbox"
-                        className="form-checkbox border-0 rounded text-blueGray-700 ml-1 w-5 h-5 ease-linear transition-all duration-150"
-                      />
-                      <span className="ml-2 text-sm font-semibold text-blueGray-600">
-                        Remember me
-                      </span>
-                    </label>
-                  </div>
-
-                  <div className="text-center mt-6">
-                    <button
-                      className="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
-                      type="button"
-                    >
-                      Sign In
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-            <div className="flex flex-wrap mt-6 relative">
-              <div className="w-1/2">
-                <Link 
-                  to="/auth/ForgetPassword"
-                  className="text-blueGray-200"
-                >
-                  <small>Forget password?</small>
-                </Link>
-              </div>
-              <div className="w-1/2 text-right">
-                <Link to="/auth/register" className="text-blueGray-200">
-                  <small>Create new account</small>
-                </Link>
-              </div>
-            </div>
-          </div>
+    <div style={{ width: "100%" }}>
+      <div style={{
+        background: "#fff",
+        borderRadius: "16px",
+        boxShadow: "0 4px 24px rgba(0,0,0,0.08)",
+        padding: "2.5rem",
+        width: "100%",
+      }}>
+ 
+        {/* Titre */}
+        <div style={{ textAlign: "center", marginBottom: "1.75rem" }}>
+          <h1 style={{ fontSize: "1.8rem", fontWeight: "700", color: "#0f172a", margin: 0 }}>
+            Connexion
+          </h1>
+          <p style={{ color: "#64748b", marginTop: "0.4rem", fontSize: "0.88rem" }}>
+            Accédez à votre espace personnel
+          </p>
         </div>
+ 
+        {error && (
+          <div style={{
+            background: "#fef2f2", border: "1px solid #fecaca",
+            color: "#dc2626", padding: "0.75rem 1rem",
+            borderRadius: "10px", marginBottom: "1.25rem", fontSize: "0.83rem",
+          }}>
+            {error}
+          </div>
+        )}
+ 
+        <form onSubmit={handleSubmit}>
+ 
+          <div style={{ marginBottom: "1.25rem" }}>
+            <label style={labelStyle}>Email</label>
+            <input
+              type="email" autoComplete="off"
+              value={email} onChange={(e) => setEmail(e.target.value)}
+              required placeholder="vous@exemple.com"
+              style={inputStyle}
+            />
+          </div>
+ 
+          <div style={{ marginBottom: "1rem" }}>
+            <label style={labelStyle}>Mot de passe</label>
+            <input
+              type="password" autoComplete="new-password"
+              value={password} onChange={(e) => setPassword(e.target.value)}
+              required placeholder="••••••••"
+              style={inputStyle}
+            />
+          </div>
+ 
+          {/* Rester connecté + Mot de passe oublié */}
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
+            <label style={{ display: "flex", alignItems: "center", gap: "0.5rem", cursor: "pointer" }}>
+              <input
+                type="checkbox" checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+                style={{ width: "15px", height: "15px", accentColor: "#2563eb", cursor: "pointer" }}
+              />
+              <span style={{ color: "#64748b", fontSize: "0.83rem" }}>Rester connecté</span>
+            </label>
+            <Link to="/auth/ForgetPassword" style={{ color: "#2563eb", fontSize: "0.83rem", textDecoration: "none" }}>
+              Mot de passe oublié ?
+            </Link>
+          </div>
+ 
+          <button
+            type="submit" disabled={loading}
+            style={{
+              width: "100%", padding: "0.9rem",
+              background: loading ? "#93c5fd" : "#2563eb",
+              color: "#fff", border: "none", borderRadius: "10px",
+              fontSize: "0.95rem", fontWeight: "600",
+              cursor: loading ? "not-allowed" : "pointer",
+              marginBottom: "1.25rem",
+            }}
+          >
+            {loading ? "Connexion..." : "Se connecter"}
+          </button>
+ 
+          <p style={{ textAlign: "center", color: "#64748b", fontSize: "0.85rem", margin: 0 }}>
+            Pas encore de compte ?{" "}
+            <Link to="/auth/register" style={{ color: "#2563eb", fontWeight: "600", textDecoration: "none" }}>
+              Créer un compte
+            </Link>
+          </p>
+ 
+        </form>
       </div>
-    </>
+    </div>
   );
 }
+ 
