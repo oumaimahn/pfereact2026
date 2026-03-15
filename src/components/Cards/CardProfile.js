@@ -1,82 +1,115 @@
 import React from "react";
-
-// components
-
+ 
+const getUser = () => {
+  const u = localStorage.getItem("user") || sessionStorage.getItem("user");
+  return u ? JSON.parse(u) : null;
+};
+ 
 export default function CardProfile() {
+  const user = getUser();
+ 
+  const getInitials = () => {
+    if (user?.firstName && user?.lastName)
+      return `${user.firstName[0]}${user.lastName[0]}`.toUpperCase();
+    return user?.username?.[0]?.toUpperCase() || "U";
+  };
+ 
+  const getStatusColor = () => {
+    if (user?.accountStatus === "actif") return "bg-green-100 text-green-700";
+    if (user?.accountStatus === "refuse") return "bg-red-100 text-red-700";
+    return "bg-orange-100 text-orange-700";
+  };
+ 
   return (
     <>
       <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg mt-16">
         <div className="px-6">
+ 
+          {/* Avatar */}
           <div className="flex flex-wrap justify-center">
             <div className="w-full px-4 flex justify-center">
               <div className="relative">
-                <img
-                  alt="..."
-                  src={require("assets/img/team-2-800x800.jpg").default}
-                  className="shadow-xl rounded-full h-auto align-middle border-none absolute -m-16 -ml-20 lg:-ml-16 max-w-150-px"
-                />
+                {user?.image_User && user.image_User !== "parent.png" ? (
+                  <img
+                    alt="profil"
+                    src={`http://localhost:5000/uploads/${user.image_User}`}
+                    className="shadow-xl rounded-full h-auto align-middle border-none absolute -m-16 -ml-20 lg:-ml-16 max-w-150-px object-cover"
+                    style={{ width: "150px", height: "150px" }}
+                  />
+                ) : (
+                  <div
+                    className="shadow-xl rounded-full absolute -m-16 -ml-20 lg:-ml-16 flex items-center justify-center bg-lightBlue-500 text-white font-bold text-3xl"
+                    style={{ width: "150px", height: "150px" }}
+                  >
+                    {getInitials()}
+                  </div>
+                )}
               </div>
             </div>
+ 
+            {/* Infos */}
             <div className="w-full px-4 text-center mt-20">
-              <div className="flex justify-center py-4 lg:pt-4 pt-8">
-                <div className="mr-4 p-3 text-center">
-                  <span className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">
-                    22
+              <div className="flex justify-center py-4 pt-8">
+                <div className="px-4 text-center">
+                  <span className={`px-3 py-1 rounded-full text-xs font-bold capitalize ${getStatusColor()}`}>
+                    {user?.accountStatus}
                   </span>
-                  <span className="text-sm text-blueGray-400">Friends</span>
-                </div>
-                <div className="mr-4 p-3 text-center">
-                  <span className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">
-                    10
-                  </span>
-                  <span className="text-sm text-blueGray-400">Photos</span>
-                </div>
-                <div className="lg:mr-4 p-3 text-center">
-                  <span className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">
-                    89
-                  </span>
-                  <span className="text-sm text-blueGray-400">Comments</span>
                 </div>
               </div>
             </div>
           </div>
-          <div className="text-center mt-12">
-            <h3 className="text-xl font-semibold leading-normal mb-2 text-blueGray-700 mb-2">
-              Jenna Stones
+ 
+          {/* Détails */}
+          <div className="text-center mt-4">
+            <h3 className="text-xl font-semibold leading-normal mb-2 text-blueGray-700">
+              {user?.firstName} {user?.lastName}
             </h3>
+ 
             <div className="text-sm leading-normal mt-0 mb-2 text-blueGray-400 font-bold uppercase">
-              <i className="fas fa-map-marker-alt mr-2 text-lg text-blueGray-400"></i>{" "}
-              Los Angeles, California
+              <i className="fas fa-user-tag mr-2 text-lg text-blueGray-400"></i>
+              {user?.role}
             </div>
-            <div className="mb-2 text-blueGray-600 mt-10">
-              <i className="fas fa-briefcase mr-2 text-lg text-blueGray-400"></i>
-              Solution Manager - Creative Tim Officer
+ 
+            <div className="mb-2 text-blueGray-600 mt-4">
+              <i className="fas fa-envelope mr-2 text-lg text-blueGray-400"></i>
+              {user?.email}
             </div>
-            <div className="mb-2 text-blueGray-600">
-              <i className="fas fa-university mr-2 text-lg text-blueGray-400"></i>
-              University of Computer Science
-            </div>
-          </div>
-          <div className="mt-10 py-10 border-t border-blueGray-200 text-center">
-            <div className="flex flex-wrap justify-center">
-              <div className="w-full lg:w-9/12 px-4">
-                <p className="mb-4 text-lg leading-relaxed text-blueGray-700">
-                  An artist of considerable range, Jenna the name taken by
-                  Melbourne-raised, Brooklyn-based Nick Murphy writes, performs
-                  and records all of his own music, giving it a warm, intimate
-                  feel with a solid groove structure. An artist of considerable
-                  range.
-                </p>
-                <a
-                  href="#pablo"
-                  className="font-normal text-lightBlue-500"
-                  onClick={(e) => e.preventDefault()}
-                >
-                  Show more
-                </a>
+ 
+            {user?.age && (
+              <div className="mb-2 text-blueGray-600">
+                <i className="fas fa-birthday-cake mr-2 text-lg text-blueGray-400"></i>
+                {user.age} ans
               </div>
-            </div>
+            )}
+ 
+            {/* Infos pédiatre */}
+            {user?.role === "pediatre" && (
+              <>
+                {user?.numero_ordre && (
+                  <div className="mb-2 text-blueGray-600">
+                    <i className="fas fa-id-card mr-2 text-lg text-blueGray-400"></i>
+                    N° ordre : {user.numero_ordre}
+                  </div>
+                )}
+                {user?.adresseCabinet && (
+                  <div className="mb-2 text-blueGray-600">
+                    <i className="fas fa-map-marker-alt mr-2 text-lg text-blueGray-400"></i>
+                    {user.adresseCabinet}
+                  </div>
+                )}
+              </>
+            )}
           </div>
+ 
+          <div className="mt-6 py-6 border-t border-blueGray-200 text-center">
+            <p className="text-sm text-blueGray-400">
+              Membre depuis{" "}
+              {user?.createdAt
+                ? new Date(user.createdAt).toLocaleDateString("fr-FR", { year: "numeric", month: "long" })
+                : "—"}
+            </p>
+          </div>
+ 
         </div>
       </div>
     </>

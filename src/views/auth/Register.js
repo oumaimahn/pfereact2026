@@ -55,7 +55,7 @@ export default function Register() {
         await axios.post("http://localhost:5000/users/addPediatre", data);
         setSuccess("pediatre");
       }
-      setTimeout(() => history.push("/auth/login"), 5000);
+      setTimeout(() => history.push("/auth/login"), 8000);
     } catch (err) {
       setError(err.response?.data?.message || "Une erreur est survenue.");
     } finally {
@@ -72,7 +72,7 @@ export default function Register() {
   };
  
   const lbl = {
-    display: "block", color: "#475569",
+    display: "block", color: "#0f172a",
     fontSize: "0.82rem", fontWeight: "600",
     marginBottom: "0.35rem",
   };
@@ -134,7 +134,7 @@ export default function Register() {
             <div style={{ fontSize: "2rem", marginBottom: "0.5rem" }}>📧</div>
             <p style={{ fontWeight: "700", marginBottom: "0.4rem" }}>Inscription réussie !</p>
             <p style={{ fontSize: "0.83rem" }}>Un email de vérification a été envoyé à <strong>{formData.email}</strong>.</p>
-            <p style={{ fontSize: "0.75rem", marginTop: "0.75rem", color: "#64748b" }}>Redirection dans 5 secondes...</p>
+            <p style={{ fontSize: "0.75rem", marginTop: "0.75rem", color: "#64748b" }}>Redirection dans 8 secondes...</p>
           </div>
         )}
  
@@ -143,7 +143,7 @@ export default function Register() {
             <div style={{ fontSize: "2rem", marginBottom: "0.5rem" }}>⏳</div>
             <p style={{ fontWeight: "700", marginBottom: "0.4rem" }}>Dossier reçu !</p>
             <p style={{ fontSize: "0.83rem" }}>Votre dossier est en cours de vérification par l'administrateur.</p>
-            <p style={{ fontSize: "0.75rem", marginTop: "0.75rem", color: "#64748b" }}>Redirection dans 5 secondes...</p>
+            <p style={{ fontSize: "0.75rem", marginTop: "0.75rem", color: "#64748b" }}>Redirection dans 8 secondes...</p>
           </div>
         )}
  
@@ -156,6 +156,7 @@ export default function Register() {
               {/* Colonne gauche */}
               <div>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.6rem", marginBottom: "0.85rem" }}>
+                  
                   <div>
                     <label style={lbl}>Prénom</label>
                     <input type="text" name="firstName" value={formData.firstName} onChange={handleChange} required placeholder="Prénom" style={input} />
